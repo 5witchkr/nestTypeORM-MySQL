@@ -8,7 +8,7 @@ export class AuthService {
         private userService: UserService
     ){}
 
-    async registerUser(newUser: UserDTO): Promise<UserDTO> {
+    async registerNewUser(newUser: UserDTO): Promise<UserDTO> {
         let userFind: UserDTO = await this.userService.findByFields({
             where: { username: newUser.username }
         });

@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { Cat } from './cats/entity/cats.entity';
 import { AuthModule } from './auth/auth.module';
+import { User } from './auth/entity/user.entity';
+
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { AuthModule } from './auth/auth.module';
       username: 'root',
       password: 'admin123!',
       database: 'test',
-      entities: [Cat],
+      entities: [Cat, User],
       synchronize: true,
     }),
     CatsModule,
