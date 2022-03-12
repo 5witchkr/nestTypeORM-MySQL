@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { UserDTO } from './dto/user.dto';
+import { AuthGuard } from './security/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -17,5 +18,12 @@ export class AuthController {
         const jwt = await this.authService.validateUser(userDTO);
         res.setHeader('Authorization', 'Bearer '+jwt.accessToken);
         return res.json(jwt);
+    }
+    //jwt토큰 인증 req.user값을 읽어오려면 authguard로 가서 검증
+    @Get('authenticate')
+    @UseGuards(AuthGuard)
+    isAuthenticated(@Req() req: Request): any {
+        const user: any = req.user;
+        return user;
     }
 }

@@ -40,4 +40,10 @@ export class AuthService {
             accessToken: this.jwtService.sign(payload)
         };
     }
+    //jwt토큰인증
+    async tokenValidateUser(payload: Payload): Promise<UserJwtDTO | undefined> {
+        return await this.userService.findByFields({
+            where: { id: payload.id }
+        });
+    }
 }
