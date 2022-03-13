@@ -10,14 +10,14 @@ function ormConfig(): TypeOrmModuleOptions{
         },
         MIGRATIONS_RUN: false,
     }
-
+ 
     const ormconfig: TypeOrmModuleOptions = {
         type: 'mysql',
-        host: 'localhost',
+        host: process.env.MYSQL_HOST,
         port: 3306,
-        username: 'root',
-        password: 'admin123!',
-        database: 'test',
+        username:  process.env.MYSQL_NAME,
+        password:  process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_TABLE,
         entities: commonConf.ENTITIES,
         //자동테이블생성
         synchronize: commonConf.SYNCRONIZE,
