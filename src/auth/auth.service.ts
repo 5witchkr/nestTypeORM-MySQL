@@ -33,8 +33,14 @@ export class AuthService {
         if(!userFind || !valudatePassword) {
             throw new UnauthorizedException();
         }
+        //권한role정보파싱
+        this.convertInAuthorities(userFind);
         //jwt
-        const payload: Payload = {id: userFind.id, username: userFind.username};
+        const payload: Payload = {
+            id: userFind.id,
+            username: userFind.username,
+            authorities: userFind.authorities,
+        };
         //return값으로 accessToken
         return {
             accessToken: this.jwtService.sign(payload)
@@ -42,8 +48,31 @@ export class AuthService {
     }
     //jwt토큰인증
     async tokenValidateUser(payload: Payload): Promise<UserJwtDTO | undefined> {
-        return await this.userService.findByFields({
+        const userFind = await this.userService.findByFields({
             where: { id: payload.id }
         });
+        this.flatAuthorities(userFind);
+        return userFind;
+    }
+    //tokenValidateUser에 넣어줄함수(role)
+    private flatAuthorities(user: any): UserJwtDTO {
+        if(user && user.authorities) {
+            const authorities: string[] = [];
+            user.authorities.forEach(authority => authorities.push(authority.authorityName));
+            user.authorities = authorities;
+        }
+        return user;
+    }
+
+    //유저권한(role)리턴값파싱함수(validateUser에 넣어줌)
+    private convertInAuthorities(user: any): UserJwtDTO {
+        if ( user && user.authorities) {
+            const authorities: any[] = [];
+            user.authorities.forEach(authority => {
+                authorities.push(authority.authorityName);
+            });
+            user.authorities = authorities;
+        }
+        return user;
     }
 }
